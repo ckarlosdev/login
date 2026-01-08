@@ -20,16 +20,12 @@ const queryMe = async (token: string) => {
 
 function useUser() {
   const token = useAuthStore((state) => state.token);
-  const logout = useAuthStore((state) => state.logout);
 
   return useQuery({
     queryKey: ["user", token],
     queryFn: () => queryMe(token!),
     enabled: !!token,
     retry: false,
-    meta: {
-      onError: () => logout() 
-    }
   });
 }
 

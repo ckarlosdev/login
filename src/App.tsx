@@ -46,6 +46,7 @@ function App() {
         login(result.token);
 
         localStorage.setItem("auth_token", result ? result.token : "");
+        localStorage.setItem("refresh_token", result ? result.refreshToken : "");
         if (user) {
           localStorage.setItem("auth_user", JSON.stringify(user));
           console.log("User logged correctly:", user);
