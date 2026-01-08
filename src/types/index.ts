@@ -8,3 +8,9 @@ export type AuthResponse = {
   refreshToken: string;
   userId: string;
 };
+
+export type User = {
+  id: number;
+  fullName: string;
+  email: string;
+};

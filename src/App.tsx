@@ -12,12 +12,17 @@ import {
 import { AuthResponse } from "./types";
 import useHttpsData from "./hooks/useHttpsData";
 import { loginURL } from "./hooks/urls";
+import { useAuthStore } from "./hooks/authStore";
+import useUser from "./hooks/useUser";
 
 function App() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { data: user } = useUser();
+  const { login } = useAuthStore();
 
   const { error: errorLogin, postData: postLogin } =
     useHttpsData<AuthResponse>();
@@ -32,23 +37,32 @@ function App() {
       password: password,
     };
 
-    let result: AuthResponse | undefined;
-    result = await postLogin(loginURL(), data);
-    if (result) {
-      localStorage.setItem("accessToken", result ? result.token : "");
+    try {
+      const result: AuthResponse | undefined = await postLogin(
+        loginURL(),
+        data
+      );
       if (result && result.token) {
-        localStorage.setItem("refreshToken", result ? result.token : "");
-      }
+        login(result.token);
 
-      console.log("Login successful. Token stored.");
-      // window.location.href = "https://www.youtube.com/";
-      window.location.href = "http://localhost:5174/";
-    } else {
-      if (errorLogin && errorLogin.message) {
-        setError(errorLogin.message);
+        localStorage.setItem("auth_token", result ? result.token : "");
+        if (user) {
+          localStorage.setItem("auth_user", JSON.stringify(user));
+          console.log("User logged correctly:", user);
+        }
+
+        window.location.href = "https://ckarlosdev.github.io/binder-webapp/";
       } else {
-        setError("Incorrect credentials. Please try again.");
+        if (errorLogin && errorLogin.message) {
+          setError(errorLogin.message);
+        } else {
+          setError("Incorrect credentials. Please try again.");
+        }
       }
+    } catch (err) {
+      setError("An unexpected error occurred.");
+    } finally {
+      setLoading(false);
     }
 
     setLoading(false);
