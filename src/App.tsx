@@ -13,7 +13,6 @@ import { AuthResponse } from "./types";
 import useHttpsData from "./hooks/useHttpsData";
 import { loginURL } from "./hooks/urls";
 import { useAuthStore } from "./hooks/authStore";
-import useUser from "./hooks/useUser";
 
 function App() {
   const [email, setEmail] = useState<string>("");
@@ -21,7 +20,6 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { data: user } = useUser();
   const { login } = useAuthStore();
 
   const { error: errorLogin, postData: postLogin } =
@@ -46,13 +44,12 @@ function App() {
         login(result.token);
 
         localStorage.setItem("auth_token", result ? result.token : "");
-        localStorage.setItem("refresh_token", result ? result.refreshToken : "");
-        if (user) {
-          localStorage.setItem("auth_user", JSON.stringify(user));
-          console.log("User logged correctly:", user);
-        }
+        localStorage.setItem(
+          "refresh_token",
+          result ? result.refreshToken : ""
+        );
 
-        window.location.href = "https://ckarlosdev.github.io/binder-webapp/";
+        window.location.href = "https://ckarlosdev.github.io/HMBrandt/";
       } else {
         if (errorLogin && errorLogin.message) {
           setError(errorLogin.message);
