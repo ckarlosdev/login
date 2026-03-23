@@ -52,7 +52,7 @@ function App() {
           console.log("User logged correctly:", user);
         }
 
-        window.location.href = "https://ckarlosdev.github.io/binder-webapp/";
+        window.location.href = "https://ckarlosdev.github.io/HMBrandt/";
       } else {
         if (errorLogin && errorLogin.message) {
           setError(errorLogin.message);
